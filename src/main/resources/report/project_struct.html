@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>项目结构报告</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
+	<link rel="stylesheet" href="https://static.jstree.com/3.3.15/assets/bootstrap/css/bootstrap.min.css" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
+	<style>
+		.project_struct {
+			margin-top: 10px;
+		}
+	</style>
+</head>
+<body>
+	<div id="project_struct" class="project_struct"></div>
+	
+ 	<script th:inline="javascript">
+		 
+		 console.log(/*[[${projectInfo}]]*/);
+		 
+       	$(function () {
+			// 0: 文件夹、1：java文件、2：类方法、99：未定义文件
+			let structData = /*[[${projectInfo}]]*/ {};
+			
+			let treeData = {
+				'text': structData.rootName,
+				'state': {'opened': true},
+				'children': processChildren(structData.children)
+			}
+			
+			$('#project_struct').jstree({
+				'core': {
+					'data': [treeData]
+				}
+			}); 
+		});
+		
+		function processChildren(children) {
+			let data = new Array();
+			for(let i of children) {
+				let child = {
+					'text': i.name,
+					'children': processChildren(i.children)
+				};
+				// icon类型
+				switch(i.type) {
+					case 0:
+						// 文件夹默认展开
+						child.state = {'opened': true};
+						break;
+					case 1:
+						// java文件节点展开，并设置文件icon
+						child.state = {'opened': true};
+						child.icon = 'jstree-file';
+						break;
+					case 2:
+						// 设置方法icon
+						child.icon = 'glyphicon glyphicon-leaf';
+						child.text += '<span style="color:' + (i.times > 0 ? 'blue' : 'red') + ';"> - 调用次数：' + i.times + '</span>';
+						break;
+					default:
+						// 未定义的统一设置
+						child.icon = 'jstree-file';
+				}
+				data.push(child);
+			}
+			return data;
+		}
+	</script>
+</body>
+</html>

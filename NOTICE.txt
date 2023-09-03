@@ -1,0 +1,8 @@
+java-file-analyzer
+Copyright 2023 cjt(tris73768u@163.com)
+
+This product includes software developed at
+The Apache Software Foundation (http://www.apache.org/).
+
+This product includes software developed by
+MySQL Connector/J (http://dev.mysql.com/doc/connector-j/en/).
